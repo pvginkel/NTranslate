@@ -4,8 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53A2640D-3B3B-413D-808B-0B508E99F1D9}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{1F211D5D-9222-47B3-B378-D168F1A39FF8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NTranslate</RootNamespace>
     <AssemblyName>NTranslate</AssemblyName>
@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,21 +38,172 @@
     <AssemblyOriginatorKeyFile>..\Support\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NHunspell">
+      <HintPath>..\packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="SystemEx">
+      <HintPath>..\packages\SystemEx.14.5.31.5\lib\net20\SystemEx.dll</HintPath>
+    </Reference>
+    <Reference Include="SystemEx.DockPanel">
+      <HintPath>..\packages\SystemEx.DockPanel.14.5.31.5\lib\net20\SystemEx.DockPanel.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\packages\SystemEx.DockPanel.14.5.31.5\lib\net20\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddLanguageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddLanguageForm.Designer.cs">
+      <DependentUpon>AddLanguageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentForm.Designer.cs">
+      <DependentUpon>DocumentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentManager.cs" />
+    <Compile Include="Dto\FileDto.cs" />
+    <Compile Include="Dto\NodeDto.cs" />
+    <Compile Include="Dto\TranslationsDto.cs" />
+    <Compile Include="FileContents.cs" />
+    <Compile Include="FileNode.cs" />
+    <Compile Include="IDocument.cs" />
+    <Compile Include="ImageListManager.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MouseWheelMessageFilter.cs" />
+    <Compile Include="NeutralResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NeutralResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OverlayImage.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectExplorerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectExplorerForm.Designer.cs">
+      <DependentUpon>ProjectExplorerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectItem.cs" />
+    <Compile Include="ProjectItemCollection.cs" />
+    <Compile Include="ProjectItemState.cs" />
+    <Compile Include="ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="ResourceEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResourceEditorForm.Designer.cs">
+      <DependentUpon>ResourceEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceNodeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ResourceNodeControl.Designer.cs">
+      <DependentUpon>ResourceNodeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceNodeState.cs" />
+    <Compile Include="SpellCheck\AddDictionariesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpellCheck\AddDictionariesForm.Designer.cs">
+      <DependentUpon>AddDictionariesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SpellCheck\SpellCheck.cs" />
+    <Compile Include="SpellCheck\RichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SpellCheck\SpellCheckDictionary.cs" />
+    <Compile Include="SpellCheck\SpellCheckTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SpellCheck\SpellCheckTextBox.Word.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TranslationCollection.cs" />
+    <Compile Include="TranslationFile.cs" />
+    <Compile Include="Win32\NativeMethods.cs" />
+    <EmbeddedResource Include="AddLanguageForm.resx">
+      <DependentUpon>AddLanguageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NeutralResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NeutralResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectExplorerForm.resx">
+      <DependentUpon>ProjectExplorerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ResourceEditorForm.resx">
+      <DependentUpon>ResourceEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResourceNodeControl.resx">
+      <DependentUpon>ResourceNodeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpellCheck\AddDictionariesForm.resx">
+      <DependentUpon>AddDictionariesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="..\Support\Key.snk">
       <Link>Key.snk</Link>
     </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="SpellCheck\en-US.aff" />
+    <EmbeddedResource Include="SpellCheck\en-US.dic" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IncompleteOverlay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CompleteOverlay.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
