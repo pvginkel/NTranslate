@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Translations xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://github.com/pvginkel/NTranslate/Translations">
+  <File name="NTranslate.Demo.MainForm.resx">
+    <Node name="$this.Text">
+      <Source>NTranslate Demo App</Source>
+      <Text>NTranslate Demo App</Text>
+    </Node>
+    <Node name="_label.Text">
+      <Source>Demo translation label.</Source>
+      <Text>Demo vertaald label.</Text>
+    </Node>
+  </File>
+</Translations>

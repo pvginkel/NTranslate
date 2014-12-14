@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NTranslate.Demo")]
+[assembly: AssemblyTitle("NTranslate.BuildTask")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NTranslate.Demo")]
+[assembly: AssemblyProduct("NTranslate.BuildTask")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bce2b6a4-2be1-4f6c-b22a-03b35ad7cc31")]
+[assembly: Guid("ba11e404-a204-4c14-968e-bb736570e831")]
 
 // Version information for an assembly consists of the following four values:
 //
