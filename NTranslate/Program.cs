@@ -10,7 +10,7 @@ namespace NTranslate
     internal static class Program
     {
         public static MainForm MainForm { get; private set; }
-        public static ProjectManager ProjectManager { get; private set; }
+        public static SolutionManager SolutionManager { get; private set; }
         public static DocumentManager DocumentManager { get; private set; }
         public static SpellCheck.SpellCheck SpellCheck { get; private set; }
 
@@ -37,7 +37,7 @@ namespace NTranslate
             MouseWheelMessageFilter.Install();
 
             SpellCheck = new SpellCheck.SpellCheck();
-            ProjectManager = new ProjectManager();
+            SolutionManager = new SolutionManager();
             MainForm = new MainForm(args);
             DocumentManager = new DocumentManager();
 

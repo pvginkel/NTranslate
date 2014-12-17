@@ -86,7 +86,7 @@ namespace NTranslate
                 Serializer.Serialize(writer, _translations);
             }
 
-            Program.ProjectManager.CurrentProject.UpdateProjectItemState(projectItem, this);
+            Project.FindProject(projectItem).UpdateProjectItemState(projectItem, this);
         }
 
         private void Sort()

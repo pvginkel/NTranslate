@@ -10,12 +10,15 @@ namespace NTranslate
     public class ProjectItem
     {
         private ProjectItemState _state;
+        private readonly Dictionary<Type, object> _properties = new Dictionary<Type, object>(); 
+
         public string Name { get; private set; }
         public string FileName { get; private set; }
         public bool IsDirectory { get; private set; }
         public ProjectItemCollection Children { get; private set; }
         public TreeNode TreeNode { get; private set; }
-        public IDocument Document { get; private set; }
+
+        public ProjectItem Parent { get; internal set; }
 
         public ProjectItemState State
         {
@@ -31,12 +34,17 @@ namespace NTranslate
         }
 
         public ProjectItem(string fileName, bool directory)
+            : this(fileName, null, directory)
+        {
+        }
+
+        public ProjectItem(string fileName, string name, bool directory)
         {
             if (fileName == null)
                 throw new ArgumentNullException("fileName");
 
             FileName = fileName;
-            Name = Path.GetFileName(fileName);
+            Name = name ?? Path.GetFileName(fileName);
             IsDirectory = directory;
             Children = new ProjectItemCollection(this);
 
@@ -51,26 +59,31 @@ namespace NTranslate
 
         public void OpenDocument()
         {
-            if (Document != null)
+            var document = GetProperty<IDocument>();
+            if (document != null)
             {
-                Document.Show();
+                document.Show();
                 return;
             }
 
-            Document = Program.DocumentManager.CreateDocument(this);
-            if (Document == null)
+            document = Program.DocumentManager.CreateDocument(this);
+            if (document == null)
                 return;
 
-            Document.Show();
+            SetProperty<IDocument>(document);
+
+            document.Show();
         }
 
         public void CloseDocument()
         {
-            if (Document == null)
+            var document = GetProperty<IDocument>();
+            if (document == null)
                 return;
 
-            Document.Close();
-            Document = null;
+            document.Close();
+
+            SetProperty<IDocument>(null);
         }
 
         private void UpdateImage()
@@ -101,6 +114,25 @@ namespace NTranslate
             }
 
             TreeNode.SelectedImageIndex = TreeNode.ImageIndex;
+        }
+
+        public T GetProperty<T>()
+            where T : class
+        {
+            object value;
+            _properties.TryGetValue(typeof(T), out value);
+            return (T)value;
+        }
+
+        public void SetProperty<T>(object value)
+            where T : class
+        {
+            if (value == null)
+                _properties.Remove(typeof(T));
+            else if (!(value is T))
+                throw new ArgumentException("Expected value to be of type " + typeof(T));
+            else
+                _properties[typeof(T)] = value;
         }
     }
 }

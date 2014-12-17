@@ -38,7 +38,7 @@ namespace NTranslate
                 control.UpdateAfterSave();
             }
 
-            Program.ProjectManager.CurrentProject.Translations[Program.MainForm.Language].Save(ProjectItem, nodes);
+            Project.FindProject(ProjectItem).SaveTranslations(Program.MainForm.Language, ProjectItem, nodes);
 
             IsDirty = false;
         }
@@ -47,8 +47,8 @@ namespace NTranslate
         {
             _tableLayoutPanel.SuspendLayout();
 
-            var translations = Program.ProjectManager.CurrentProject.Translations[Program.MainForm.Language];
-            var contents = FileContents.Load(ProjectItem, translations.FindFile(ProjectItem));
+            var translations = Project.FindProject(ProjectItem).LoadTranslations(Program.MainForm.Language, ProjectItem);
+            var contents = FileContents.Load(ProjectItem, translations);
 
             foreach (var node in _tableLayoutPanel.Controls.Cast<Control>().ToList())
             {

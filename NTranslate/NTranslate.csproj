@@ -71,6 +71,7 @@
     <Compile Include="AddLanguageForm.Designer.cs">
       <DependentUpon>AddLanguageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="DocumentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,7 +110,6 @@
     <Compile Include="ProjectItem.cs" />
     <Compile Include="ProjectItemCollection.cs" />
     <Compile Include="ProjectItemState.cs" />
-    <Compile Include="ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceEditorForm.cs">
       <SubType>Form</SubType>
@@ -124,6 +124,8 @@
       <DependentUpon>ResourceNodeControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ResourceNodeState.cs" />
+    <Compile Include="Solution.cs" />
+    <Compile Include="SolutionManager.cs" />
     <Compile Include="SpellCheck\AddDictionariesForm.cs">
       <SubType>Form</SubType>
     </Compile>

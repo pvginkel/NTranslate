@@ -79,7 +79,7 @@ namespace NTranslate
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Program.ProjectManager.CurrentProjectChanged += ProjectManager_CurrentProjectChanged;
+            Program.SolutionManager.CurrentSolutionChanged += SolutionManager_CurrentSolutionChanged;
             Program.DocumentManager.CurrentDocumentChanged += DocumentManager_CurrentDocumentChanged;
 
             UpdateEnabled();
@@ -90,14 +90,14 @@ namespace NTranslate
             UpdateEnabled();
         }
 
-        void ProjectManager_CurrentProjectChanged(object sender, EventArgs e)
+        void SolutionManager_CurrentSolutionChanged(object sender, EventArgs e)
         {
-            var project = Program.ProjectManager.CurrentProject;
+            var solution = Program.SolutionManager.CurrentSolution;
 
             Text =
-                project == null
+                solution == null
                 ? _loadedTitle
-                : _loadedTitle + " - " + project.RootNode.Name;
+                : _loadedTitle + " - " + solution.RootNode.Name;
 
             RebuildLanguages();
 
@@ -106,13 +106,13 @@ namespace NTranslate
 
         private void UpdateEnabled()
         {
-            bool haveProject = Program.ProjectManager.CurrentProject != null;
+            bool haveSolution = Program.SolutionManager.CurrentSolution != null;
             bool haveDocument = Program.DocumentManager.CurrentDocument != null;
 
             openToolStripMenuItem.Enabled = ProjectExplorer.SelectedProjectItem != null;
-            closeProjectToolStripMenuItem.Enabled = haveProject;
+            closeSolutionToolStripMenuItem.Enabled = haveSolution;
             saveToolStripMenuItem.Enabled = haveDocument;
-            saveAllToolStripMenuItem.Enabled = haveProject;
+            saveAllToolStripMenuItem.Enabled = haveSolution;
             closeToolStripMenuItem.Enabled = haveDocument;
         }
 
@@ -125,9 +125,9 @@ namespace NTranslate
         {
             using (var form = new OpenFileDialog())
             {
-                form.Filter = "C# Project (*.csproj)|*.csproj|All Files (*.*)|All Files";
+                form.Filter = "Solution (*.sln)|*.sln|All Files (*.*)|All Files";
                 if (form.ShowDialog(this) == DialogResult.OK)
-                    Program.ProjectManager.OpenProject(form.FileName);
+                    Program.SolutionManager.OpenSolution(form.FileName);
             }
         }
 
@@ -135,9 +135,9 @@ namespace NTranslate
         {
             foreach (string arg in _args)
             {
-                if (String.Equals(".csproj", Path.GetExtension(arg), StringComparison.OrdinalIgnoreCase))
+                if (String.Equals(".sln", Path.GetExtension(arg), StringComparison.OrdinalIgnoreCase))
                 {
-                    Program.ProjectManager.OpenProject(arg);
+                    Program.SolutionManager.OpenSolution(arg);
                     break;
                 }
             }
@@ -145,7 +145,7 @@ namespace NTranslate
 
         private void closeProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Program.ProjectManager.CloseProject();
+            Program.SolutionManager.CloseSolution();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -167,7 +167,10 @@ namespace NTranslate
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    Program.ProjectManager.CurrentProject.AddLanguage(form.SelectedLanguage);
+                    foreach (var projectItem in Program.SolutionManager.CurrentSolution.RootNode.Children)
+                    {
+                        projectItem.GetProperty<Project>().AddLanguage(form.SelectedLanguage);
+                    }
 
                     SelectLanguage(form.SelectedLanguage);
                 }
@@ -188,13 +191,16 @@ namespace NTranslate
             int offset = 0;
             bool hadLanguage = false;
 
-            if (Program.ProjectManager.CurrentProject != null)
-            {
-                var languages = Program.ProjectManager.CurrentProject.Translations
-                    .Select(p => p.Language)
-                    .OrderBy(p => p.DisplayName);
+            var cultureInfos = new HashSet<CultureInfo>();
 
-                foreach (var language in languages)
+            if (Program.SolutionManager.CurrentSolution != null)
+            {
+                foreach (var projectItem in Program.SolutionManager.CurrentSolution.RootNode.Children)
+                {
+                    cultureInfos.AddRange(projectItem.GetProperty<Project>().GetTranslatedLanguages());
+                }
+
+                foreach (var language in cultureInfos.OrderBy(p => p.DisplayName))
                 {
                     var menuItem = new ToolStripMenuItem
                     {
@@ -263,7 +269,7 @@ namespace NTranslate
             if (e.CloseReason != CloseReason.UserClosing)
                 return;
 
-            if (!Program.ProjectManager.CloseProject())
+            if (!Program.SolutionManager.CloseSolution())
                 e.Cancel = true;
         }
 

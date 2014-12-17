@@ -6,43 +6,43 @@ using System.Windows.Forms;
 
 namespace NTranslate
 {
-    public class ProjectManager
+    public class SolutionManager
     {
-        private Project _currentProject;
+        private Solution _solution;
 
-        public event EventHandler CurrentProjectChanged;
-
-        protected virtual void OnCurrentProjectChanged(EventArgs e)
+        public Solution CurrentSolution
         {
-            var handler = CurrentProjectChanged;
-            if (handler != null)
-                handler(this, e);
-        }
-
-        public Project CurrentProject
-        {
-            get { return _currentProject; }
+            get { return _solution; }
             private set
             {
-                if (_currentProject != value)
+                if (_solution != value)
                 {
-                    _currentProject = value;
-                    OnCurrentProjectChanged(EventArgs.Empty);
+                    _solution = value;
+                    OnCurrentSolutionChanged(EventArgs.Empty);
                 }
             }
         }
 
-        public void OpenProject(string fileName)
-        {
-            if (_currentProject != null && !CloseProject())
-                return;
+        public event EventHandler CurrentSolutionChanged;
 
-            CurrentProject = new Project(fileName);
+        protected virtual void OnCurrentSolutionChanged(EventArgs e)
+        {
+            var handler = CurrentSolutionChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
-        public bool CloseProject()
+        public void OpenSolution(string fileName)
         {
-            if (CurrentProject == null)
+            if (CurrentSolution != null && !CloseSolution())
+                return;
+
+            CurrentSolution = new Solution(fileName);
+        }
+
+        public bool CloseSolution()
+        {
+            if (CurrentSolution == null)
                 return true;
 
             var documents = Program.MainForm.DockPanel.Documents.Select(p => (IDocument)p).ToList();
@@ -69,8 +69,8 @@ namespace NTranslate
                 }
             }
 
-            CurrentProject.Dispose();
-            CurrentProject = null;
+            CurrentSolution.Dispose();
+            CurrentSolution = null;
 
             return true;
         }

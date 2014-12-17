@@ -16,7 +16,7 @@ namespace NTranslate
     {
         public static FileContents Load(ProjectItem projectItem, FileDto translationsFile)
         {
-            return Load(Program.ProjectManager.CurrentProject, projectItem, translationsFile);
+            return Load(Project.FindProject(projectItem), projectItem, translationsFile);
         }
 
         public static FileContents Load(Project project, ProjectItem projectItem, FileDto translationsFile)

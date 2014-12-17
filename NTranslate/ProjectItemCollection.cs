@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -20,6 +21,11 @@ namespace NTranslate
 
         protected override void ClearItems()
         {
+            foreach (var item in this)
+            {
+                item.Parent = null;
+            }
+
             base.ClearItems();
 
             _projectItem.TreeNode.Nodes.Clear();
@@ -27,6 +33,11 @@ namespace NTranslate
 
         protected override void InsertItem(int index, ProjectItem item)
         {
+            if (item.Parent != null)
+                throw new InvalidOperationException();
+
+            item.Parent = _projectItem;
+
             base.InsertItem(index, item);
 
             _projectItem.TreeNode.Nodes.Insert(index, item.TreeNode);
@@ -34,6 +45,8 @@ namespace NTranslate
 
         protected override void RemoveItem(int index)
         {
+            this[index].Parent = null;
+
             base.RemoveItem(index);
 
             _projectItem.TreeNode.Nodes.RemoveAt(index);
@@ -41,6 +54,13 @@ namespace NTranslate
 
         protected override void SetItem(int index, ProjectItem item)
         {
+            if (item.Parent != null)
+                throw new InvalidOperationException();
+
+            this[index].Parent = null;
+
+            item.Parent = _projectItem;
+
             base.SetItem(index, item);
 
             _projectItem.TreeNode.Nodes[index] = item.TreeNode;

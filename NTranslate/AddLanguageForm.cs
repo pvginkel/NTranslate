@@ -61,22 +61,7 @@ namespace NTranslate
 
         private void _acceptButton_Click(object sender, EventArgs e)
         {
-            var language = SelectedLanguage;
-
-            if (Program.ProjectManager.CurrentProject.Translations.Any(p => p.Language.Equals(language)))
-            {
-                MessageBox.Show(
-                    this,
-                    "This language is already available in the project.",
-                    "Add Language",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-            }
-            else
-            {
-                DialogResult = DialogResult.OK;
-            }
+            DialogResult = DialogResult.OK;
         }
     }
 }

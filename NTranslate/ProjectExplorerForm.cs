@@ -61,7 +61,7 @@ namespace NTranslate
 
             FolderImageIndex = GetFolderImageIndex();
 
-            Program.ProjectManager.CurrentProjectChanged += ProjectManager_CurrentProjectChanged;
+            Program.SolutionManager.CurrentSolutionChanged += SolutionManager_CurrentSolutionChanged;
             mainForm.DockPanel.ActiveContentChanged += DockPanel_ActiveContentChanged;
         }
 
@@ -74,14 +74,14 @@ namespace NTranslate
             _treeView.SelectedNode = document.ProjectItem.TreeNode;
         }
 
-        void ProjectManager_CurrentProjectChanged(object sender, EventArgs e)
+        void SolutionManager_CurrentSolutionChanged(object sender, EventArgs e)
         {
             _treeView.Nodes.Clear();
 
-            var project = Program.ProjectManager.CurrentProject;
-            if (project != null)
+            var solution = Program.SolutionManager.CurrentSolution;
+            if (solution != null)
             {
-                _treeView.Nodes.Add(project.RootNode.TreeNode);
+                _treeView.Nodes.Add(solution.RootNode.TreeNode);
                 _treeView.Nodes[0].Expand();
             }
         }

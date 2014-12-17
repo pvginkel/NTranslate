@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using NTranslate.Dto;
 
 namespace NTranslate
 {
@@ -12,20 +13,40 @@ namespace NTranslate
     {
         private static readonly string[] IncludedExtensions = { ".resx" };
         private readonly string _translationsPath;
+        private readonly TranslationCollection _translations = new TranslationCollection();
         private bool _disposed;
+
+        public static Project FindProject(ProjectItem projectItem)
+        {
+            if (projectItem == null)
+                throw new ArgumentNullException("projectItem");
+
+            while (projectItem != null)
+            {
+                var project = projectItem.GetProperty<Project>();
+                if (project != null)
+                    return project;
+
+                projectItem = projectItem.Parent;
+            }
+
+            throw new InvalidOperationException("Cannot find project");
+        }
 
         public ProjectItem RootNode { get; private set; }
         public string Directory { get; private set; }
-        public TranslationCollection Translations { get; private set; }
         public string Namespace { get; private set; }
 
-        public Project(string fileName)
+        public Project(string fileName, string name)
         {
             if (fileName == null)
                 throw new ArgumentNullException("fileName");
+            if (name == null)
+                throw new ArgumentNullException("name");
 
-            RootNode = new ProjectItem(fileName, false);
-            Translations = new TranslationCollection();
+            RootNode = new ProjectItem(fileName, name, false);
+            RootNode.SetProperty<Project>(this);
+
             Namespace = GetNamespace(fileName);
 
             Directory = Path.GetDirectoryName(RootNode.FileName);
@@ -67,7 +88,7 @@ namespace NTranslate
             {
                 foreach (string fileName in System.IO.Directory.GetFiles(_translationsPath, "*" + TranslationFile.Extension))
                 {
-                    Translations.Add(new TranslationFile(fileName, Namespace));
+                    _translations.Add(new TranslationFile(fileName, Namespace));
                 }
             }
         }
@@ -108,8 +129,8 @@ namespace NTranslate
         {
             var language = Program.MainForm.Language;
             TranslationFile file = null;
-            if (language != null && Translations.Contains(language))
-                file = Translations[language];
+            if (language != null && _translations.Contains(language))
+                file = _translations[language];
 
             UpdateFromLanguage(RootNode, file);
         }
@@ -162,18 +183,6 @@ namespace NTranslate
                 Array.IndexOf(IncludedExtensions, entry.Extension.ToLowerInvariant()) != -1;
         }
 
-        public void AddLanguage(CultureInfo cultureInfo)
-        {
-            string fileName = Path.Combine(
-                _translationsPath,
-                cultureInfo.Name + TranslationFile.Extension
-            );
-
-            System.IO.Directory.CreateDirectory(_translationsPath);
-
-            Translations.Add(new TranslationFile(fileName, Namespace));
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -182,6 +191,61 @@ namespace NTranslate
 
                 _disposed = true;
             }
+        }
+
+        public void SaveTranslations(CultureInfo cultureInfo, ProjectItem projectItem, List<NodeDto> nodes)
+        {
+            if (cultureInfo == null)
+                throw new ArgumentNullException("cultureInfo");
+            if (projectItem == null)
+                throw new ArgumentNullException("projectItem");
+            if (nodes == null)
+                throw new ArgumentNullException("nodes");
+
+            GetTranslations(cultureInfo).Save(projectItem, nodes);
+        }
+
+        private TranslationFile GetTranslations(CultureInfo cultureInfo)
+        {
+            if (!_translations.Contains(cultureInfo))
+            {
+                string fileName = Path.Combine(
+                    _translationsPath,
+                    cultureInfo.Name + TranslationFile.Extension
+                );
+
+                System.IO.Directory.CreateDirectory(_translationsPath);
+
+                _translations.Add(new TranslationFile(fileName, Namespace));
+            }
+
+            return _translations[cultureInfo];
+        }
+
+        public FileDto LoadTranslations(CultureInfo cultureInfo, ProjectItem projectItem)
+        {
+            if (cultureInfo == null)
+                throw new ArgumentNullException("cultureInfo");
+            if (projectItem == null)
+                throw new ArgumentNullException("projectItem");
+
+            if (_translations.Contains(cultureInfo))
+                return _translations[cultureInfo].FindFile(projectItem);
+
+            return null;
+        }
+
+        public IEnumerable<CultureInfo> GetTranslatedLanguages()
+        {
+            return _translations.Select(p => p.Language);
+        }
+
+        public void AddLanguage(CultureInfo cultureInfo)
+        {
+            if (cultureInfo == null)
+                throw new ArgumentNullException("cultureInfo");
+
+            GetTranslations(cultureInfo);
         }
     }
 }
