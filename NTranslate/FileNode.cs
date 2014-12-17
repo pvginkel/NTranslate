@@ -15,7 +15,7 @@ namespace NTranslate
 
         public bool Hidden
         {
-            get { return Name.StartsWith(">>"); }
+            get { return TranslationUtil.ShouldHide(Name, Source); }
         }
 
         public FileNode(string name, string source, string originalSource, string translated, string comment)

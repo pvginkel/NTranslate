@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="TranslationCollection.cs" />
     <Compile Include="TranslationFile.cs" />
+    <Compile Include="TranslationUtil.cs" />
     <Compile Include="Win32\NativeMethods.cs" />
     <EmbeddedResource Include="AddLanguageForm.resx">
       <DependentUpon>AddLanguageForm.cs</DependentUpon>

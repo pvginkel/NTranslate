@@ -7,7 +7,7 @@
     </Node>
     <Node name="_label.Text">
       <Source>Demo translation label.</Source>
-      <Text>Demo vertaald label.sxx</Text>
+      <Text>Demo vertaald label.</Text>
     </Node>
   </File>
 </Translations>

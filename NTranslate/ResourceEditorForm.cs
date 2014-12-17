@@ -86,7 +86,7 @@ namespace NTranslate
 
             foreach (ResourceNodeControl control in _tableLayoutPanel.Controls)
             {
-                if ((_selection & Selection.Hidden) == 0 && control.CreateNode().Name.StartsWith(">>"))
+                if ((_selection & Selection.Hidden) == 0 && TranslationUtil.ShouldHide(control.CreateNode()))
                 {
                     control.Visible = false;
                 }
