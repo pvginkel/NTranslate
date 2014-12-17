@@ -23,8 +23,6 @@ namespace NTranslate
 
             Program.MainForm.LanguageChanged += MainForm_LanguageChanged;
 
-            ReloadNodes();
-
             Disposed += ResourceEditorForm_Disposed;
         }
 
@@ -58,14 +56,16 @@ namespace NTranslate
             _tableLayoutPanel.RowStyles.Clear();
             _tableLayoutPanel.RowCount = 1;
 
+            var dictionary = Program.SolutionManager.CurrentSolution.Dictionary;
+
             foreach (var node in contents.Nodes)
             {
-                AddNode(node);
+                AddNode(node, dictionary);
             }
 
             SetSelection(_selection, false);
 
-            _tableLayoutPanel.ResumeLayout(true);
+            _tableLayoutPanel.ResumeLayout();
         }
 
         private void SetSelection(Selection selection, bool showHidden)
@@ -109,7 +109,7 @@ namespace NTranslate
                 }
             }
 
-            _tableLayoutPanel.ResumeLayout(true);
+            _tableLayoutPanel.ResumeLayout();
         }
 
         void MainForm_LanguageChanged(object sender, EventArgs e)
@@ -122,14 +122,15 @@ namespace NTranslate
             Program.MainForm.LanguageChanged -= MainForm_LanguageChanged;
         }
 
-        private void AddNode(FileNode node)
+        private void AddNode(FileNode node, TranslationDictionary dictionary)
         {
-            var editor = new ResourceNodeControl(node)
+            var editor = new ResourceNodeControl(node, dictionary)
             {
                 Dock = DockStyle.Fill
             };
 
             editor.Changed += editor_Changed;
+            editor.Visible = false;
 
             _tableLayoutPanel.RowCount = _tableLayoutPanel.Controls.Count + 1;
 
@@ -165,6 +166,11 @@ namespace NTranslate
         private void _showHidden_Click(object sender, EventArgs e)
         {
             SetSelection(_selection & ~Selection.Hidden, (_selection & Selection.Hidden) == 0);
+        }
+
+        private void ResourceEditorForm_Shown(object sender, EventArgs e)
+        {
+            ReloadNodes();
         }
 
         [Flags]

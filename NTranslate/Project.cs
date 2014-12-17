@@ -37,7 +37,7 @@ namespace NTranslate
         public string Directory { get; private set; }
         public string Namespace { get; private set; }
 
-        public Project(string fileName, string name)
+        public Project(Solution solution, string fileName, string name)
         {
             if (fileName == null)
                 throw new ArgumentNullException("fileName");
@@ -56,7 +56,7 @@ namespace NTranslate
             LoadTranslations();
             LoadProject(RootNode, new DirectoryInfo(Path.GetDirectoryName(fileName)), "");
 
-            UpdateFromLanguage();
+            UpdateFromLanguage(solution.Dictionary);
 
             Program.MainForm.LanguageChanged += MainForm_LanguageChanged;
         }
@@ -79,7 +79,7 @@ namespace NTranslate
 
         void MainForm_LanguageChanged(object sender, EventArgs e)
         {
-            UpdateFromLanguage();
+            UpdateFromLanguage(Program.SolutionManager.CurrentSolution.Dictionary);
         }
 
         private void LoadTranslations()
@@ -125,28 +125,37 @@ namespace NTranslate
             return hadAny;
         }
 
-        private void UpdateFromLanguage()
+        private void UpdateFromLanguage(TranslationDictionary dictionary)
         {
             var language = Program.MainForm.Language;
             TranslationFile file = null;
             if (language != null && _translations.Contains(language))
                 file = _translations[language];
 
-            UpdateFromLanguage(RootNode, file);
+            UpdateFromLanguage(
+                dictionary,
+                RootNode,
+                file
+            );
         }
 
-        private void UpdateFromLanguage(ProjectItem projectItem, TranslationFile file)
+        private void UpdateFromLanguage(TranslationDictionary dictionary, ProjectItem projectItem, TranslationFile file)
         {
             if (String.Equals(".resx", Path.GetExtension(projectItem.FileName), StringComparison.OrdinalIgnoreCase))
-                UpdateProjectItemState(projectItem, file);
+                UpdateProjectItemState(dictionary, projectItem, file);
 
             foreach (var child in projectItem.Children)
             {
-                UpdateFromLanguage(child, file);
+                UpdateFromLanguage(dictionary, child, file);
             }
         }
 
         public void UpdateProjectItemState(ProjectItem projectItem, TranslationFile file)
+        {
+            UpdateProjectItemState(Program.SolutionManager.CurrentSolution.Dictionary, projectItem, file);
+        }
+
+        private void UpdateProjectItemState(TranslationDictionary dictionary, ProjectItem projectItem, TranslationFile file)
         {
             if (projectItem == null)
                 throw new ArgumentNullException("projectItem");
@@ -166,8 +175,10 @@ namespace NTranslate
                     (!node.Hidden && node.Translated == null)
                 ) {
                     anyPending = true;
-                    break;
                 }
+
+                if (node.Translated != null)
+                    dictionary.Add(node.OriginalSource, node.Translated);
             }
 
             if (fileContents.Nodes.Count == 0)

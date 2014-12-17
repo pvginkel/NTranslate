@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,6 +19,7 @@ namespace NTranslate
         private bool _disposed;
 
         public ProjectItem RootNode { get; private set; }
+        public TranslationDictionary Dictionary { get; private set; }
 
         public Solution(string fileName)
         {
@@ -29,7 +29,15 @@ namespace NTranslate
             RootNode = new ProjectItem(fileName, false);
             RootNode.SetProperty<Solution>(this);
 
+            Dictionary = new TranslationDictionary();
+
             LoadSolution();
+            Program.MainForm.LanguageChanged += MainForm_LanguageChanged;
+        }
+
+        void MainForm_LanguageChanged(object sender, EventArgs e)
+        {
+            Dictionary = new TranslationDictionary();
         }
 
         private void LoadSolution()
@@ -42,6 +50,7 @@ namespace NTranslate
                 if (match.Success)
                 {
                     var project = new Project(
+                        this,
                         Path.Combine(
                             Path.GetDirectoryName(RootNode.FileName),
                             Unquote(match.Groups[2].Value)
@@ -78,6 +87,8 @@ namespace NTranslate
                 {
                     projectItem.GetProperty<Project>().Dispose();
                 }
+
+                Program.MainForm.LanguageChanged -= MainForm_LanguageChanged;
 
                 _disposed = true;
             }

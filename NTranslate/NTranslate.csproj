@@ -144,7 +144,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TranslationCollection.cs" />
+    <Compile Include="TranslationDictionary.cs" />
     <Compile Include="TranslationFile.cs" />
+    <Compile Include="TranslationString.cs" />
     <Compile Include="TranslationUtil.cs" />
     <Compile Include="Win32\NativeMethods.cs" />
     <EmbeddedResource Include="AddLanguageForm.resx">

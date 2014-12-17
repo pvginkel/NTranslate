@@ -33,9 +33,10 @@
             this._showAll = new System.Windows.Forms.ToolStripButton();
             this._showPending = new System.Windows.Forms.ToolStripButton();
             this._showMissing = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this._showHidden = new System.Windows.Forms.ToolStripButton();
             this._tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._showHidden = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -47,6 +48,7 @@
             this._showAll,
             this._showPending,
             this._showMissing,
+            this.toolStripSeparator1,
             this._showHidden});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -84,6 +86,21 @@
             this._showMissing.Text = "Show Missing";
             this._showMissing.Click += new System.EventHandler(this._showMissing_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _showHidden
+            // 
+            this._showHidden.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this._showHidden.Image = ((System.Drawing.Image)(resources.GetObject("_showHidden.Image")));
+            this._showHidden.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._showHidden.Name = "_showHidden";
+            this._showHidden.Size = new System.Drawing.Size(82, 22);
+            this._showHidden.Text = "Show Hidden";
+            this._showHidden.Click += new System.EventHandler(this._showHidden_Click);
+            // 
             // _tableLayoutPanel
             // 
             this._tableLayoutPanel.AutoSize = true;
@@ -108,16 +125,6 @@
             this.panel1.Size = new System.Drawing.Size(558, 417);
             this.panel1.TabIndex = 0;
             // 
-            // _showHidden
-            // 
-            this._showHidden.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this._showHidden.Image = ((System.Drawing.Image)(resources.GetObject("_showHidden.Image")));
-            this._showHidden.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._showHidden.Name = "_showHidden";
-            this._showHidden.Size = new System.Drawing.Size(82, 22);
-            this._showHidden.Text = "Show Hidden";
-            this._showHidden.Click += new System.EventHandler(this._showHidden_Click);
-            // 
             // ResourceEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -129,6 +136,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ResourceEditorForm";
             this.Text = "Resource Editor";
+            this.Shown += new System.EventHandler(this.ResourceEditorForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -147,5 +155,6 @@
         private System.Windows.Forms.ToolStripButton _showMissing;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripButton _showHidden;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

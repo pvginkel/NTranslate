@@ -42,14 +42,20 @@ namespace NTranslate
             InitializeComponent();
         }
 
-        public ResourceNodeControl(FileNode node)
+        public ResourceNodeControl(FileNode node, TranslationDictionary dictionary)
             : this()
         {
+            if (node == null)
+                throw new ArgumentNullException("node");
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
             _name.Text = node.Name;
             _source.Text = node.Source;
             _comment.Text = node.Comment;
             _originalSource.Text = node.OriginalSource;
             _translated.Text = node.Translated;
+            _proposal.Text = dictionary.GetTranslation(node.Source);
 
             UpdateControlVisibility();
             UpdateColor();
@@ -57,17 +63,19 @@ namespace NTranslate
 
         private void UpdateControlVisibility()
         {
-            if (_source.Text == _originalSource.Text)
-            {
-                _tableLayoutPanel.Controls.Remove(_originalSourceLabel);
-                _tableLayoutPanel.Controls.Remove(_originalSource);
-            }
+            _tableLayoutPanel.SuspendLayout();
 
-            if (_comment.Text.Length == 0)
-            {
-                _tableLayoutPanel.Controls.Remove(_commentLabel);
-                _tableLayoutPanel.Controls.Remove(_comment);
-            }
+            _originalSourceLabel.Visible = _source.Text != _originalSource.Text;
+            _originalSource.Visible = _source.Text != _originalSource.Text;
+
+            _commentLabel.Visible = _comment.Text.Length > 0;
+            _comment.Visible = _comment.Text.Length > 0;
+
+            _proposalLabel.Visible = _translated.Text != _proposal.Text;
+            _proposal.Visible = _translated.Text != _proposal.Text;
+            _applyButton.Visible = _translated.Text != _proposal.Text;
+
+            _tableLayoutPanel.ResumeLayout();
         }
 
         public void UpdateAfterSave()
@@ -120,6 +128,39 @@ namespace NTranslate
         {
             _panel.Height = _tableLayoutPanel.Height + _panel.Padding.Vertical;
             Height = _panel.Height + 1;
+        }
+
+        private void _proposal_SizeChanged(object sender, EventArgs e)
+        {
+            _applyButton.Height = _proposal.Height;
+        }
+
+        private void _applyButton_Click(object sender, EventArgs e)
+        {
+            _translated.Text = _proposal.Text;
+
+            UpdateControlVisibility();
+        }
+
+        private void _translated_Leave(object sender, EventArgs e)
+        {
+            if (_translated.Text.Trim().Length <= 0)
+                return;
+
+            var source = TranslationString.Parse(_source.Text);
+            var translated = TranslationString.Parse(_translated.Text);
+
+            var text = source.Prolog + translated.Text + source.Epilog;
+
+            if (text == _translated.Text)
+                return;
+
+            _translated.Text = text;
+
+            OnChanged(EventArgs.Empty);
+
+            UpdateControlVisibility();
+            UpdateColor();
         }
     }
 }
