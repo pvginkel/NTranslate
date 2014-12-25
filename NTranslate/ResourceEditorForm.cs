@@ -33,10 +33,14 @@ namespace NTranslate
             foreach (ResourceNodeControl control in _tableLayoutPanel.Controls)
             {
                 nodes.Add(control.CreateNode());
-                control.UpdateAfterSave();
             }
 
             Project.FindProject(ProjectItem).SaveTranslations(Program.MainForm.Language, ProjectItem, nodes);
+
+            foreach (ResourceNodeControl control in _tableLayoutPanel.Controls)
+            {
+                control.UpdateAfterSave();
+            }
 
             IsDirty = false;
         }

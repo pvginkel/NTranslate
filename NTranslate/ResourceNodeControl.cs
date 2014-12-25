@@ -12,6 +12,7 @@ namespace NTranslate
 {
     public partial class ResourceNodeControl : UserControl
     {
+        private readonly TranslationDictionary _dictionary;
         private static readonly Color Green = Color.FromArgb(200, 255, 200);
         private static readonly Color Orange = Color.FromArgb(255, 234, 194);
         private static readonly Color Red = Color.FromArgb(255, 200, 200);
@@ -50,6 +51,8 @@ namespace NTranslate
             if (dictionary == null)
                 throw new ArgumentNullException("dictionary");
 
+            _dictionary = dictionary;
+
             _name.Text = node.Name;
             _source.Text = node.Source;
             _comment.Text = node.Comment;
@@ -81,6 +84,8 @@ namespace NTranslate
         public void UpdateAfterSave()
         {
             _originalSource.Text = _source.Text;
+
+            _proposal.Text = _dictionary.GetTranslation(_source.Text);
 
             UpdateControlVisibility();
             UpdateColor();
