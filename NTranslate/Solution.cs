@@ -12,7 +12,7 @@ namespace NTranslate
     {
         private const string QuotedPattern = "\"[^\"]*\"";
         private static readonly Regex ProjectLineRe = new Regex(
-            "^Project\\(" + QuotedPattern + "\\) = (" + QuotedPattern + "), (" + QuotedPattern + "), " + QuotedPattern + "$",
+            "^Project\\((" + QuotedPattern + ")\\) = (" + QuotedPattern + "), (" + QuotedPattern + "), " + QuotedPattern + "$",
             RegexOptions.Compiled
         );
 
@@ -49,13 +49,20 @@ namespace NTranslate
                 var match = ProjectLineRe.Match(line);
                 if (match.Success)
                 {
+                    string guid = match.Groups[1].Value;
+
+                    // Ignore folders.
+
+                    if (guid.ToUpperInvariant().Contains("2150E333-8FDC-42A3-9474-1A3956D46DE8"))
+                        continue;
+
                     var project = new Project(
                         this,
                         Path.Combine(
                             Path.GetDirectoryName(RootNode.FileName),
-                            Unquote(match.Groups[2].Value)
+                            Unquote(match.Groups[3].Value)
                         ),
-                        Unquote(match.Groups[1].Value)
+                        Unquote(match.Groups[2].Value)
                     );
 
                     projects.Add(project.RootNode);
