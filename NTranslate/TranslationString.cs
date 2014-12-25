@@ -56,6 +56,7 @@ namespace NTranslate
                 case ']':
                 case '<':
                 case '>':
+                case '&': // Mnemonics may move
                     return false;
 
                 default:
