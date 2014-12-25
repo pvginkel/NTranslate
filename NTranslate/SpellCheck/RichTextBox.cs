@@ -96,10 +96,17 @@ namespace NTranslate.SpellCheck
             {
                 case Keys.Control | Keys.C:
                 case Keys.Control | Keys.Insert:
-                    if (SelectionLength > 0)
-                        Clipboard.SetText(Text.Substring(SelectionStart, SelectionLength));
-                    else
-                        Clipboard.SetText(Text);
+                    try
+                    {
+                        if (SelectionLength > 0)
+                            Clipboard.SetText(Text.Substring(SelectionStart, SelectionLength));
+                        else
+                            Clipboard.SetText(Text);
+                    }
+                    catch
+                    {
+                        // Ignore exceptions from clipboard.
+                    }
                     return true;
             }
 

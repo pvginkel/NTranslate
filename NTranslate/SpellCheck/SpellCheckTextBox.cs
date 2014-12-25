@@ -472,15 +472,20 @@ namespace NTranslate.SpellCheck
 
         protected override void OnTextChanged(EventArgs e)
         {
-            base.OnTextChanged(e);
-
             if (_otherSignificantPressed)
             {
                 UnderlineNewPositionWords(true);
                 _otherSignificantPressed = false;
             }
 
-            base.OnTextChanged(EventArgs.Empty);
+            base.OnTextChanged(e);
+        }
+
+        protected override void OnLeave(EventArgs e)
+        {
+            UnderlineIncorrectWords();
+
+            base.OnLeave(e);
         }
 
         // Update UnderlinedSections variable of the editor.
